@@ -12,7 +12,7 @@ Now that GDB is formally deprecated/unsupported for Kernel Debugging in OS X a s
 ###Explanation of Values
 	nvram 	 		= Easy way to access the boot-args, otherwise edit the apple boot .plist file
 	boot-args 		= Duh
-	-v 	            		= Not necessary, turns off the "pretty" apple screen and lets you see startup stuff
+	-v 	            	= Not necessary, turns off the "pretty" apple screen and lets you see startup stuff
 	debug=0xd44		= Bitmask values that are better explained by the Internet. Trust me, just use these
 	kdp_match_name=en4	= Hack to specify which NIC to use upon crashing, en4 is our thunderbolt adapter, YMMV.
 	_panicd_ip		= The IP of our receiver/remote debugger/listener
@@ -23,18 +23,20 @@ Now that GDB is formally deprecated/unsupported for Kernel Debugging in OS X a s
 - Remote computer (Slave/Client/Crashing Machine)
 $ sudo nvram boot-args="debug=0x141 kext-dev-mode=1 kcsuffix=development pmuflags=1 -v"
 - In order to boot into the development kernel remotely we need to copy the dev kernel to the system folder
+
 $ for 10.11.x you need to disable SIP, boot into Recovery mode (Cmd+R when booting)
-		$csrutil disable
-		$reboot
+	$ csrutil disable
+	$ reboot
 	$ sudo cp /Library/Developer/KDKs/KDK_10.11.1_15B42.kdk/System/Library/Kernels/kernel.development /System/Library/Kernels/kernel.development 
 ###Explanation of Values
 nvram 	 		= Easy way to access the boot-args, otherwise edit the apple boot .plist file
 boot-args 		= Duh
 debug=0x141		= Bitmask values various settings. (DB_HALT|DB_ARP|DB_LOG_PI_SCRN)
-kext-dev-mode=1	= Allows you to load unsigned kernel extensions (OPTIONAL)
+kext-dev-mode=1		= Allows you to load unsigned kernel extensions (OPTIONAL)
 kcsuffix=development	= Allows you to specify a debug kernel if you want (=debug) (OPTIONAL)
 pmuflags=1		= Disables the kernel watchdog timer
--v 	            		= Not necessary, turns off the "pretty" apple screen and lets you see startup stuff
+-v 	            	= Not necessary, turns off the "pretty" apple screen and lets you see startup stuff
+
 ## Setting up your Target Machine:
 	- Download the Kernel Debug Kit from Apple Developer website under the OS X download category.
 	- Make sure the Kernel Debug Kit you download matches the version of OS X installed on your target machine.
