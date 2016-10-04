@@ -10,13 +10,13 @@ Now that GDB is formally deprecated/unsupported for Kernel Debugging in OS X a s
 	- $sudo nvram boot-args -v debug=0xd44 kdp_match_name=en4 _panicd_ip=192.168.11.2
 
 ###Explanation of Values
-	nvram 	 		= Easy way to access the boot-args, otherwise edit the apple boot .plist file
-	boot-args 		= Duh
-	-v 	            	= Not necessary, turns off the "pretty" apple screen and lets you see startup stuff
-	debug=0xd44		= Bitmask values that are better explained by the Internet. Trust me, just use these
-	kdp_match_name=en4	= Hack to specify which NIC to use upon crashing, en4 is our thunderbolt adapter, YMMV.
-	_panicd_ip		= The IP of our receiver/remote debugger/listener
-	_panicd_port		= Don't set this unless you have to. The default is '1069' leave it alone
+- nvram	 		= Easy way to access the boot-args, otherwise edit the apple boot .plist file
+- boot-args 		= Duh
+- -v 	            	= Not necessary, turns off the "pretty" apple screen and lets you see startup stuff
+- debug=0xd44		= Bitmask values that are better explained by the Internet. Trust me, just use these
+- kdp_match_name=en4	= Hack to specify which NIC to use upon crashing, en4 is our thunderbolt adapter, YMMV.
+- _panicd_ip		= The IP of our receiver/remote debugger/listener
+- _panicd_port		= Don't set this unless you have to. The default is '1069' leave it alone
 
 ###How to set your boot-args for Master/Slave Debugging
 (VM waits for remote debugger to connect before booting up)
@@ -25,10 +25,12 @@ Now that GDB is formally deprecated/unsupported for Kernel Debugging in OS X a s
 
 - In order to boot into the development kernel remotely we need to copy the dev kernel to the system folder
 
-$ for 10.11.x you need to disable SIP, boot into Recovery mode (Cmd+R when booting)
+- for 10.11.x you need to disable SIP
+	- boot into Recovery mode (Cmd+R when booting)
 	- $csrutil disable
 	- $reboot
 	- $sudo cp /Library/Developer/KDKs/KDK_10.11.1_15B42.kdk/System/Library/Kernels/kernel.development /System/Library/Kernels/kernel.development 
+
 ###Explanation of Values
 - nvram 	 	= Easy way to access the boot-args, otherwise edit the apple boot .plist file
 - boot-args 		= Duh
@@ -56,37 +58,34 @@ $ for 10.11.x you need to disable SIP, boot into Recovery mode (Cmd+R when booti
 	Static GW: 192.168.11.1
 
 - Test the IP Connectivity
-	$ ping 192.168.11.3
+	- $ping 192.168.11.3
 
 - Start the debugger
-	$ lldb
+	- $lldb
 
 - Tell LLDB that we want to work with a remote OSX instance
-	$(lldb) platform select remote-macosx
-
+	- $(lldb) platform select remote-macosx
 
 ###From TARGET Machine (Slave/Client/Machine that you want to crash)
 - Test the IP Connectivity
-	$ ping 192.168.11.2
+	- $ping 192.168.11.2
 
 - Trigger the Kernel Panic/Crash on your Target Machine
-	$ ./crash_and_burn
+	- $./crash_and_burn
 
 - You should see some output on the screen saying "Waiting for Remote Debugger"
 
-
 ###From DEBUG Machine (Host/Server/Not Crashing Machine)
 - Initiate the remote debugging session
-	$(lldb) kdp-remote 192.168.11.3
+	- $(lldb) kdp-remote 192.168.11.3
 
 - Congratulations now you can debug remotely!!!
-
 
 ## Building the 'debugserver' binary
 Note: This is only necessary if you want to connect to the target/test machine with a remote LLDB session.
 
 - Debugserver is a listener that you invoke thusly:
-	$ ./debugserver *:4444 -a "ProcessNameYouWantToServeUp"
+	- $./debugserver *:4444 -a "ProcessNameYouWantToServeUp"
 
 	*	= means listen for a remote LLDB session from any source IP (you should specify your IP for security)
 	4444 	= is the port that you will listen on
@@ -101,17 +100,17 @@ To utilize this setup you would launch LLDB like this:
 - Download via the App Store
 
 ##Install Brew:
-$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+- $ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 ##Install Swig: 
-$ wget http://prdownloads.sourceforge.net/swig/swig-3.0.5.tar.gz; tar xzvf swig-3.0.5.tar.gz;./configure/make/make install
+- $wget http://prdownloads.sourceforge.net/swig/swig-3.0.5.tar.gz; tar xzvf swig-3.0.5.tar.gz;./configure/make/make install
 
 ##Install LLDB:
 ###Use the Source Luke:
 
 From Terminal:
-$ git clone http://llvm.org/llvm/lldb.git
-$ cd lldb;open lldb.codeproj (XCode should launch automagically)
+- $git clone http://llvm.org/llvm/lldb.git
+- $cd lldb;open lldb.codeproj (XCode should launch automagically)
 
 From XCode:
 - Click "Install" to install additional XCode components
@@ -136,13 +135,11 @@ From XCode:
 - Copy this file somewhere so you can use it to launch your remote debugger
 
 You can also Locate the binary directly from Terminal:
-- $ cd /Users/<yourname>/Library/Developer/Xcode/DerivedData/lldb-<something_random>/Build/Products/Debug
+- $cd /Users/<yourname>/Library/Developer/Xcode/DerivedData/lldb-<something_random>/Build/Products/Debug
 - Copy this file somewhere so you can use it to launch your remote debugger
 
 ##Using ‘debugserver’ to enable remote debugging for your App
 http://iphonedevwiki.net/index.php/Debugserver
-
-
 
 
 ##Useful Links:
