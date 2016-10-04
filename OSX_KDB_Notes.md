@@ -3,11 +3,11 @@ Now that GDB is formally deprecated/unsupported for Kernel Debugging in OS X a s
 
 ##boot-args 101
 ###How to check your boot args:
-	$ nvram -p
+	- $nvram -p
 
 ###How to set your boot-args for Thunderbolt Networked version (both “sides” need Thunderbolt Adapters
 - Remote computer (Slave/Client/Crashing Machine)
-	$ sudo nvram boot-args -v debug=0xd44 kdp_match_name=en4 _panicd_ip=192.168.11.2
+	- $sudo nvram boot-args -v debug=0xd44 kdp_match_name=en4 _panicd_ip=192.168.11.2
 
 ###Explanation of Values
 	nvram 	 		= Easy way to access the boot-args, otherwise edit the apple boot .plist file
@@ -21,21 +21,22 @@ Now that GDB is formally deprecated/unsupported for Kernel Debugging in OS X a s
 ###How to set your boot-args for Master/Slave Debugging
 (VM waits for remote debugger to connect before booting up)
 - Remote computer (Slave/Client/Crashing Machine)
-$ sudo nvram boot-args="debug=0x141 kext-dev-mode=1 kcsuffix=development pmuflags=1 -v"
+	- $sudo nvram boot-args="debug=0x141 kext-dev-mode=1 kcsuffix=development pmuflags=1 -v"
+
 - In order to boot into the development kernel remotely we need to copy the dev kernel to the system folder
 
 $ for 10.11.x you need to disable SIP, boot into Recovery mode (Cmd+R when booting)
-	$ csrutil disable
-	$ reboot
-	$ sudo cp /Library/Developer/KDKs/KDK_10.11.1_15B42.kdk/System/Library/Kernels/kernel.development /System/Library/Kernels/kernel.development 
+	- $csrutil disable
+	- $reboot
+	- $sudo cp /Library/Developer/KDKs/KDK_10.11.1_15B42.kdk/System/Library/Kernels/kernel.development /System/Library/Kernels/kernel.development 
 ###Explanation of Values
-nvram 	 		= Easy way to access the boot-args, otherwise edit the apple boot .plist file
-boot-args 		= Duh
-debug=0x141		= Bitmask values various settings. (DB_HALT|DB_ARP|DB_LOG_PI_SCRN)
-kext-dev-mode=1		= Allows you to load unsigned kernel extensions (OPTIONAL)
-kcsuffix=development	= Allows you to specify a debug kernel if you want (=debug) (OPTIONAL)
-pmuflags=1		= Disables the kernel watchdog timer
--v 	            	= Not necessary, turns off the "pretty" apple screen and lets you see startup stuff
+- nvram 	 	= Easy way to access the boot-args, otherwise edit the apple boot .plist file
+- boot-args 		= Duh
+- debug=0x141		= Bitmask values various settings. (DB_HALT|DB_ARP|DB_LOG_PI_SCRN)
+- kext-dev-mode=1	= Allows you to load unsigned kernel extensions (OPTIONAL)
+- kcsuffix=development	= Allows you to specify a debug kernel if you want (=debug) (OPTIONAL)
+- pmuflags=1		= Disables the kernel watchdog timer
+- -v 	            	= Not necessary, turns off the "pretty" apple screen and lets you see startup stuff
 
 ## Setting up your Target Machine:
 	- Download the Kernel Debug Kit from Apple Developer website under the OS X download category.
@@ -92,9 +93,9 @@ Note: This is only necessary if you want to connect to the target/test machine w
 	-a 	= puts 'debugserver' into "attach" mode
 
 To utilize this setup you would launch LLDB like this:
-	$ lldb
-	$(lldb) platform select remote-osx (or remote-ios or whatever)
-	$(lldb) kdp-remote 192.168.11.3:4444 (IP and Listener port you specified above)
+	- $lldb
+	- $(lldb) platform select remote-osx (or remote-ios or whatever)
+	- $(lldb) kdp-remote 192.168.11.3:4444 (IP and Listener port you specified above)
 
 ##Install XCODE:
 - Download via the App Store
